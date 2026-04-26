@@ -4,64 +4,88 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
-use App\Http\Requests\StoreTeacherRequest;
-use App\Http\Requests\UpdateTeacherRequest;
+use App\Models\Department;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $teachers = Teacher::with('user', 'department')->latest()->get();
+        return view('admin.teachers.index', compact('teachers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $departments = Department::all();
+        return view('admin.teachers.create', compact('departments'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreTeacherRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:users,email',
+            'password'      => 'required|string|min:8|confirmed',
+            'employee_id'   => 'required|string|max:50|unique:teachers,employee_id',
+            'department_id' => 'required|exists:departments,id',
+        ]);
+
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        $user->assignRole('Teacher');
+
+        Teacher::create([
+            'user_id'       => $user->id,
+            'employee_id'   => $request->employee_id,
+            'department_id' => $request->department_id,
+        ]);
+
+        return redirect()->route('admin.teachers.index')->with('success', 'Teacher created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Teacher $teacher)
     {
-        //
+        $teacher->load('user', 'department', 'subjects');
+        return view('admin.teachers.show', compact('teacher'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Teacher $teacher)
     {
-        //
+        $departments = Department::all();
+        return view('admin.teachers.edit', compact('teacher', 'departments'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateTeacherRequest $request, Teacher $teacher)
+    public function update(Request $request, Teacher $teacher)
     {
-        //
+        $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:users,email,' . $teacher->user_id,
+            'employee_id'   => 'required|string|max:50|unique:teachers,employee_id,' . $teacher->id,
+            'department_id' => 'required|exists:departments,id',
+        ]);
+
+        $teacher->user->update([
+            'name'  => $request->name,
+            'email' => $request->email,
+        ]);
+
+        $teacher->update([
+            'employee_id'   => $request->employee_id,
+            'department_id' => $request->department_id,
+        ]);
+
+        return redirect()->route('admin.teachers.index')->with('success', 'Teacher updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Teacher $teacher)
     {
-        //
+        $teacher->user->delete(); // cascades to teacher
+        return redirect()->route('admin.teachers.index')->with('success', 'Teacher deleted successfully.');
     }
 }

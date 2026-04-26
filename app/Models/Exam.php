@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Semester extends Model
+class Exam extends Model
 {
     protected $guarded = [];
 
-    public function students() { return $this->hasMany(Student::class); }
-    public function subjects() { return $this->hasMany(Subject::class); }
+    public function schedules() { return $this->hasMany(ExamSchedule::class); }
     public function results() { return $this->hasMany(Result::class); }
 }

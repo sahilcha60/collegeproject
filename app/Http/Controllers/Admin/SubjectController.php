@@ -4,64 +4,69 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Subject;
-use App\Http\Requests\StoreSubjectRequest;
-use App\Http\Requests\UpdateSubjectRequest;
+use App\Models\Department;
+use App\Models\Semester;
+use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $subjects = Subject::with('department', 'semester')->latest()->get();
+        return view('admin.subjects.index', compact('subjects'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $departments = Department::all();
+        $semesters   = Semester::all();
+        return view('admin.subjects.create', compact('departments', 'semesters'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreSubjectRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'          => 'required|string|max:255',
+            'code'          => 'required|string|max:50|unique:subjects,code',
+            'credits'       => 'required|integer|min:1|max:10',
+            'department_id' => 'required|exists:departments,id',
+            'semester_id'   => 'required|exists:semesters,id',
+        ]);
+
+        Subject::create($request->only('name', 'code', 'credits', 'department_id', 'semester_id'));
+        return redirect()->route('admin.subjects.index')->with('success', 'Subject created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Subject $subject)
     {
-        //
+        $subject->load('department', 'semester', 'teachers');
+        return view('admin.subjects.show', compact('subject'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Subject $subject)
     {
-        //
+        $departments = Department::all();
+        $semesters   = Semester::all();
+        return view('admin.subjects.edit', compact('subject', 'departments', 'semesters'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateSubjectRequest $request, Subject $subject)
+    public function update(Request $request, Subject $subject)
     {
-        //
+        $request->validate([
+            'name'          => 'required|string|max:255',
+            'code'          => 'required|string|max:50|unique:subjects,code,' . $subject->id,
+            'credits'       => 'required|integer|min:1|max:10',
+            'department_id' => 'required|exists:departments,id',
+            'semester_id'   => 'required|exists:semesters,id',
+        ]);
+
+        $subject->update($request->only('name', 'code', 'credits', 'department_id', 'semester_id'));
+        return redirect()->route('admin.subjects.index')->with('success', 'Subject updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Subject $subject)
     {
-        //
+        $subject->delete();
+        return redirect()->route('admin.subjects.index')->with('success', 'Subject deleted successfully.');
     }
 }

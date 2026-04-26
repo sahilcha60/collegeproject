@@ -4,64 +4,58 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Semester;
-use App\Http\Requests\StoreSemesterRequest;
-use App\Http\Requests\UpdateSemesterRequest;
+use Illuminate\Http\Request;
 
 class SemesterController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $semesters = Semester::latest()->get();
+        return view('admin.semesters.index', compact('semesters'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.semesters.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreSemesterRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'       => 'required|string|max:255|unique:semesters,name',
+            'start_date' => 'required|date',
+            'end_date'   => 'required|date|after_or_equal:start_date',
+        ]);
+
+        Semester::create($request->only('name', 'start_date', 'end_date'));
+        return redirect()->route('admin.semesters.index')->with('success', 'Semester created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Semester $semester)
     {
-        //
+        return view('admin.semesters.show', compact('semester'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Semester $semester)
     {
-        //
+        return view('admin.semesters.edit', compact('semester'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateSemesterRequest $request, Semester $semester)
+    public function update(Request $request, Semester $semester)
     {
-        //
+        $request->validate([
+            'name'       => 'required|string|max:255|unique:semesters,name,' . $semester->id,
+            'start_date' => 'required|date',
+            'end_date'   => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $semester->update($request->only('name', 'start_date', 'end_date'));
+        return redirect()->route('admin.semesters.index')->with('success', 'Semester updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Semester $semester)
     {
-        //
+        $semester->delete();
+        return redirect()->route('admin.semesters.index')->with('success', 'Semester deleted successfully.');
     }
 }

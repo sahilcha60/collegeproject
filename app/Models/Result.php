@@ -11,4 +11,5 @@ class Result extends Model
     public function student() { return $this->belongsTo(Student::class); }
     public function subject() { return $this->belongsTo(Subject::class); }
     public function semester() { return $this->belongsTo(Semester::class); }
+    public function exam() { return $this->belongsTo(Exam::class); }
 }

@@ -1,0 +1,64 @@
+@extends('admin.layouts.master')
+@section('header_title', 'Add Student')
+@section('content')
+<div class="max-w-lg mx-auto bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-semibold text-gray-700 mb-6">Add New Student</h3>
+    @include('admin.layouts.partials.alerts')
+    <form action="{{ route('admin.students.store') }}" method="POST">
+        @csrf
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input type="text" name="name" value="{{ old('name') }}"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror">
+            @error('name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" name="email" value="{{ old('email') }}"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror">
+            @error('email')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" name="password"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('password') border-red-500 @enderror">
+            @error('password')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+            <input type="password" name="password_confirmation"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Enrollment No</label>
+            <input type="text" name="enrollment_no" value="{{ old('enrollment_no') }}" placeholder="e.g. BCA2024001"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('enrollment_no') border-red-500 @enderror">
+            @error('enrollment_no')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+            <select name="department_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('department_id') border-red-500 @enderror">
+                <option value="">-- Select Department --</option>
+                @foreach($departments as $dept)
+                    <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
+                @endforeach
+            </select>
+            @error('department_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+        </div>
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Semester</label>
+            <select name="semester_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('semester_id') border-red-500 @enderror">
+                <option value="">-- Select Semester --</option>
+                @foreach($semesters as $sem)
+                    <option value="{{ $sem->id }}" {{ old('semester_id') == $sem->id ? 'selected' : '' }}>{{ $sem->name }}</option>
+                @endforeach
+            </select>
+            @error('semester_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+        </div>
+        <div class="flex gap-3">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition">Save</button>
+            <a href="{{ route('admin.students.index') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2 rounded-lg transition">Cancel</a>
+        </div>
+    </form>
+</div>
+@endsection
