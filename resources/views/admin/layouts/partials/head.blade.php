@@ -3,11 +3,16 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <title>{{ config('app.name', 'Laravel') }} - Admin</title>
+<link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}" sizes="16x16">
 
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.bunny.net">
-<link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('assets/css/remixicon.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/lib/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/lib/apexcharts.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/lib/dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/lib/flatpickr.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/lib/full-calendar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/lib/calendar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
-<!-- Scripts -->
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @stack('styles')

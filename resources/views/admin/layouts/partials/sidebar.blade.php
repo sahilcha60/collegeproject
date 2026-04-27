@@ -1,65 +1,107 @@
-<aside class="w-64 bg-gray-900 min-h-screen text-gray-300 flex-shrink-0">
-    <div class="h-16 flex items-center px-6 bg-gray-950 text-white text-xl font-bold tracking-wider">
-        🎓 College ERP
+<aside class="sidebar">
+    <button type="button" class="sidebar-close-btn">
+        <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
+    </button>
+
+    <div>
+        <div class="sidebar-logo d-flex align-items-center justify-content-between">
+            <a href="{{ route('admin.dashboard') }}">
+                <img src="{{ asset('assets/images/logo.png') }}" alt="site logo" class="light-logo">
+                <img src="{{ asset('assets/images/logo-light.png') }}" alt="site logo" class="dark-logo">
+                <img src="{{ asset('assets/images/logo-icon.png') }}" alt="site logo" class="logo-icon">
+            </a>
+            <button type="button" class="text-xxl d-xl-flex d-none line-height-1 sidebar-toggle text-neutral-500" aria-label="Collapse Sidebar">
+                <i class="ri-contract-left-line"></i>
+            </button>
+        </div>
     </div>
-    <nav class="mt-4 px-4 space-y-1 pb-8">
 
-        {{-- Dashboard --}}
-        <a href="{{ route('admin.dashboard') }}"
-            class="{{ request()->routeIs('admin.dashboard') ? 'bg-blue-700 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">🏠</span> Dashboard
-        </a>
+    <div class="mx-16 py-12">
+        <div class="dropdown profile-dropdown">
+            <button type="button" class="profile-dropdown__button d-flex align-items-center justify-content-between p-10 w-100 overflow-hidden bg-neutral-50 radius-12" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                <span class="d-flex align-items-start gap-10">
+                    <span class="w-40-px h-40-px rounded-circle bg-primary-100 d-flex align-items-center justify-content-center flex-shrink-0">
+                        <i class="ri-user-3-line text-primary-600"></i>
+                    </span>
+                    <span class="profile-dropdown__contents">
+                        <span class="h6 mb-0 text-md d-block text-primary-light">{{ Auth::user()->name ?? 'Admin' }}</span>
+                        <span class="text-secondary-light text-sm mb-0 d-block">Administrator</span>
+                    </span>
+                </span>
+                <span class="profile-dropdown__icon pe-8 text-xl d-flex line-height-1">
+                    <i class="ri-arrow-right-s-line"></i>
+                </span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-lg-end border p-12">
+                <li>
+                    <a href="{{ route('profile.edit') }}" class="dropdown-item rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900 d-flex align-items-center gap-2 py-6">
+                        <i class="ri-settings-3-line"></i>
+                        Profile Settings
+                    </a>
+                </li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900 d-flex align-items-center gap-2 py-6 w-100">
+                            <i class="ri-shut-down-line"></i>
+                            Log Out
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-        {{-- Academic --}}
-        <div class="pt-4 pb-1 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Academic</div>
+    <div class="sidebar-menu-area">
+        <ul class="sidebar-menu" id="sidebar-menu">
+            <li class="{{ request()->routeIs('admin.dashboard') ? 'active-page' : '' }}">
+                <a href="{{ route('admin.dashboard') }}">
+                    <i class="ri-home-4-line"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
 
-        <a href="{{ route('admin.departments.index') }}"
-            class="{{ request()->routeIs('admin.departments.*') ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">🏛️</span> Departments
-        </a>
-        <a href="{{ route('admin.semesters.index') }}"
-            class="{{ request()->routeIs('admin.semesters.*') ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">📅</span> Semesters
-        </a>
-        <a href="{{ route('admin.subjects.index') }}"
-            class="{{ request()->routeIs('admin.subjects.*') ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">📚</span> Subjects
-        </a>
+            <li class="dropdown {{ request()->routeIs('admin.departments.*') || request()->routeIs('admin.semesters.*') || request()->routeIs('admin.subjects.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)">
+                    <i class="ri-list-view"></i>
+                    <span>Academic</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{{ route('admin.departments.index') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Departments</a></li>
+                    <li><a href="{{ route('admin.semesters.index') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Semesters</a></li>
+                    <li><a href="{{ route('admin.subjects.index') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Subjects</a></li>
+                </ul>
+            </li>
 
-        {{-- People --}}
-        <div class="pt-4 pb-1 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">People</div>
+            <li class="dropdown {{ request()->routeIs('admin.students.*') || request()->routeIs('admin.teachers.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)">
+                    <i class="ri-user-follow-line"></i>
+                    <span>People</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{{ route('admin.students.index') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Students</a></li>
+                    <li><a href="{{ route('admin.teachers.index') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Teachers</a></li>
+                </ul>
+            </li>
 
-        <a href="{{ route('admin.teachers.index') }}"
-            class="{{ request()->routeIs('admin.teachers.*') ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">👨‍🏫</span> Teachers
-        </a>
-        <a href="{{ route('admin.students.index') }}"
-            class="{{ request()->routeIs('admin.students.*') ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">🎒</span> Students
-        </a>
+            <li class="dropdown {{ request()->routeIs('admin.exams.*') || request()->routeIs('admin.exam-schedules.*') || request()->routeIs('admin.results.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)">
+                    <i class="ri-file-edit-line"></i>
+                    <span>Examinations</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{{ route('admin.exams.index') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Exams</a></li>
+                    <li><a href="{{ route('admin.exam-schedules.index') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Exam Schedules</a></li>
+                    <li><a href="{{ route('admin.results.index') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Results</a></li>
+                </ul>
+            </li>
 
-        {{-- Examinations --}}
-        <div class="pt-4 pb-1 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Examinations</div>
-
-        <a href="{{ route('admin.exams.index') }}"
-            class="{{ request()->routeIs('admin.exams.*') ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">📝</span> Exams
-        </a>
-        <a href="{{ route('admin.exam-schedules.index') }}"
-            class="{{ request()->routeIs('admin.exam-schedules.*') ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">🗓️</span> Exam Schedules
-        </a>
-        <a href="{{ route('admin.results.index') }}"
-            class="{{ request()->routeIs('admin.results.*') ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">📊</span> Results
-        </a>
-
-        {{-- Communication --}}
-        <div class="pt-4 pb-1 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Communication</div>
-
-        <a href="{{ route('admin.notices.index') }}"
-            class="{{ request()->routeIs('admin.notices.*') ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white' }} flex items-center py-2.5 px-4 rounded transition duration-200">
-            <span class="mr-3">📢</span> Notices
-        </a>
-    </nav>
+            <li class="{{ request()->routeIs('admin.notices.*') ? 'active-page' : '' }}">
+                <a href="{{ route('admin.notices.index') }}">
+                    <i class="ri-booklet-line"></i>
+                    <span>Notices</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 </aside>

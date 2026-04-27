@@ -1,30 +1,26 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 <head>
     @include('admin.layouts.partials.head')
 </head>
-<body class="font-sans antialiased bg-gray-100 flex h-screen overflow-hidden">
+<body>
+    <div class="overlay bg-black bg-opacity-50 w-100 h-100 position-fixed z-9 visibility-hidden opacity-0 duration-300"></div>
 
-    <!-- Sidebar -->
     @include('admin.layouts.partials.sidebar')
 
-    <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <!-- Header -->
+    <main class="dashboard-main">
         @include('admin.layouts.partials.header')
 
-        <!-- Main Content -->
-        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-            <div class="container mx-auto px-6 py-8">
-                @yield('content')
+        <div class="dashboard-main-body">
+            <div class="mb-24">
+                @include('admin.layouts.partials.alerts')
             </div>
-        </main>
+            @yield('content')
+        </div>
 
-        <!-- Footer -->
         @include('admin.layouts.partials.footer')
-    </div>
+    </main>
 
-    <!-- Scripts -->
     @include('admin.layouts.partials.scripts')
 </body>
 </html>
