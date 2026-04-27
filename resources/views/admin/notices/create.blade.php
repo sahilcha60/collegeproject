@@ -12,11 +12,15 @@
                 class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('title') border-red-500 @enderror">
             @error('title')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
         </div>
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
-            <textarea name="content" rows="6" placeholder="Write notice content here..."
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('content') border-red-500 @enderror">{{ old('content') }}</textarea>
-            @error('content')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Target Audience</label>
+            <select name="target" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('target') border-red-500 @enderror">
+                <option value="">-- Select Target --</option>
+                <option value="student" {{ old('target') == 'student' ? 'selected' : '' }}>Students</option>
+                <option value="teacher" {{ old('target') == 'teacher' ? 'selected' : '' }}>Teachers</option>
+                <option value="all" {{ old('target', 'all') == 'all' ? 'selected' : '' }}>All</option>
+            </select>
+            @error('target')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
         </div>
         <div class="flex gap-3">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition">Publish</button>

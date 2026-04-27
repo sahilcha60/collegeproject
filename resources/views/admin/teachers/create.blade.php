@@ -35,7 +35,7 @@
                 class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('employee_id') border-red-500 @enderror">
             @error('employee_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
         </div>
-        <div class="mb-6">
+        <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
             <select name="department_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('department_id') border-red-500 @enderror">
                 <option value="">-- Select Department --</option>

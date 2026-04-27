@@ -85,6 +85,10 @@ class TeacherController extends Controller
 
     public function destroy(Teacher $teacher)
     {
+        if ($teacher->subjects()->count()) {
+            return back()->with('error', 'Cannot delete teacher: They are assigned to subjects.');
+        }
+
         $teacher->user->delete(); // cascades to teacher
         return redirect()->route('admin.teachers.index')->with('success', 'Teacher deleted successfully.');
     }

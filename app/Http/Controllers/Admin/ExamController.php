@@ -63,6 +63,14 @@ class ExamController extends Controller
 
     public function destroy(Exam $exam)
     {
+        if ($exam->schedules()->count()) {
+            return back()->with('error', 'Cannot delete exam: It has associated exam schedules.');
+        }
+
+        if ($exam->results()->count()) {
+            return back()->with('error', 'Cannot delete exam: It has associated results.');
+        }
+
         $exam->delete();
         return redirect()->route('admin.exams.index')->with('success', 'Exam deleted successfully.');
     }

@@ -55,6 +55,18 @@ class SemesterController extends Controller
 
     public function destroy(Semester $semester)
     {
+        if ($semester->students()->count()) {
+            return back()->with('error', 'Cannot delete semester: It has associated students.');
+        }
+
+        if ($semester->subjects()->count()) {
+            return back()->with('error', 'Cannot delete semester: It has associated subjects.');
+        }
+
+        if ($semester->results()->count()) {
+            return back()->with('error', 'Cannot delete semester: It has associated results.');
+        }
+
         $semester->delete();
         return redirect()->route('admin.semesters.index')->with('success', 'Semester deleted successfully.');
     }

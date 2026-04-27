@@ -12,6 +12,7 @@
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Target</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Published</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
@@ -21,8 +22,17 @@
             <tr>
                 <td class="px-6 py-4 text-sm text-gray-500">{{ $loop->iteration }}</td>
                 <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $notice->title }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium 
+                        @if($notice->target == 'student') bg-blue-100 text-blue-700
+                        @elseif($notice->target == 'teacher') bg-green-100 text-green-700
+                        @else bg-purple-100 text-purple-700 @endif">
+                        {{ ucfirst($notice->target) }}
+                    </span>
+                </td>
                 <td class="px-6 py-4 text-sm text-gray-500">{{ $notice->created_at->format('d M Y') }}</td>
                 <td class="px-6 py-4 text-sm flex gap-3">
+                    <a href="{{ route('admin.notices.show', $notice) }}" class="text-blue-600 hover:underline">View</a>
                     <a href="{{ route('admin.notices.edit', $notice) }}" class="text-yellow-600 hover:underline">Edit</a>
                     <form action="{{ route('admin.notices.destroy', $notice) }}" method="POST" onsubmit="return confirm('Delete this notice?')">
                         @csrf @method('DELETE')
@@ -31,7 +41,7 @@
                 </td>
             </tr>
             @empty
-            <tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No notices found.</td></tr>
+            <tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No notices found.</td></tr>
             @endforelse
         </tbody>
     </table>

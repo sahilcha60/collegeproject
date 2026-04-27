@@ -66,6 +66,18 @@ class SubjectController extends Controller
 
     public function destroy(Subject $subject)
     {
+        if ($subject->results()->count()) {
+            return back()->with('error', 'Cannot delete subject: It has associated results.');
+        }
+
+        if ($subject->attendances()->count()) {
+            return back()->with('error', 'Cannot delete subject: It has associated attendance records.');
+        }
+
+        if ($subject->teachers()->count()) {
+            return back()->with('error', 'Cannot delete subject: It has associated teachers.');
+        }
+
         $subject->delete();
         return redirect()->route('admin.subjects.index')->with('success', 'Subject deleted successfully.');
     }

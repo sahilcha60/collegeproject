@@ -24,9 +24,10 @@ class NoticeController extends Controller
         $request->validate([
             'title'   => 'required|string|max:255',
             'content' => 'required|string',
+            'target'  => 'required|in:student,teacher,all',
         ]);
 
-        Notice::create($request->only('title', 'content'));
+        Notice::create($request->only('title', 'content', 'target'));
         return redirect()->route('admin.notices.index')->with('success', 'Notice published successfully.');
     }
 
@@ -45,9 +46,10 @@ class NoticeController extends Controller
         $request->validate([
             'title'   => 'required|string|max:255',
             'content' => 'required|string',
+            'target'  => 'required|in:student,teacher,all',
         ]);
 
-        $notice->update($request->only('title', 'content'));
+        $notice->update($request->only('title', 'content', 'target'));
         return redirect()->route('admin.notices.index')->with('success', 'Notice updated successfully.');
     }
 

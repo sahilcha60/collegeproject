@@ -18,7 +18,7 @@
                 class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('start_date') border-red-500 @enderror">
             @error('start_date')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
         </div>
-        <div class="mb-6">
+        <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
             <input type="date" name="end_date" value="{{ old('end_date') }}"
                 class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 @error('end_date') border-red-500 @enderror">

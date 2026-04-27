@@ -51,6 +51,18 @@ class DepartmentController extends Controller
 
     public function destroy(Department $department)
     {
+        if ($department->students()->count()) {
+            return back()->with('error', 'Cannot delete department: It has associated students.');
+        }
+
+        if ($department->teachers()->count()) {
+            return back()->with('error', 'Cannot delete department: It has associated teachers.');
+        }
+
+        if ($department->subjects()->count()) {
+            return back()->with('error', 'Cannot delete department: It has associated subjects.');
+        }
+
         $department->delete();
         return redirect()->route('admin.departments.index')->with('success', 'Department deleted successfully.');
     }

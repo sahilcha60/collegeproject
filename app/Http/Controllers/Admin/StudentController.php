@@ -92,6 +92,18 @@ class StudentController extends Controller
 
     public function destroy(Student $student)
     {
+        if ($student->results()->count()) {
+            return back()->with('error', 'Cannot delete student: They have associated results.');
+        }
+
+        if ($student->attendances()->count()) {
+            return back()->with('error', 'Cannot delete student: They have associated attendance records.');
+        }
+
+        if ($student->billings()->count()) {
+            return back()->with('error', 'Cannot delete student: They have associated billing records.');
+        }
+
         $student->user->delete(); // cascades to student
         return redirect()->route('admin.students.index')->with('success', 'Student deleted successfully.');
     }

@@ -12,10 +12,29 @@ use Illuminate\Http\Request;
 
 class ResultController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $results = Result::with('student.user', 'subject', 'semester', 'exam')->latest()->get();
-        return view('admin.results.index', compact('results'));
+        $query = Result::with('student.user', 'subject', 'semester', 'exam');
+
+        // Apply filters
+        if ($request->filled('semester_id')) {
+            $query->where('semester_id', $request->semester_id);
+        }
+        if ($request->filled('subject_id')) {
+            $query->where('subject_id', $request->subject_id);
+        }
+        if ($request->filled('student_id')) {
+            $query->where('student_id', $request->student_id);
+        }
+
+        $results = $query->latest()->get();
+
+        // Get data for filters
+        $semesters = Semester::all();
+        $subjects = Subject::all();
+        $students = Student::with('user')->get();
+
+        return view('admin.results.index', compact('results', 'semesters', 'subjects', 'students'));
     }
 
     public function create()
@@ -36,13 +55,26 @@ class ResultController extends Controller
             'exam_id'        => 'required|exists:exams,id',
             'internal_marks' => 'required|numeric|min:0|max:100',
             'external_marks' => 'required|numeric|min:0|max:100',
-            'total_marks'    => 'required|numeric|min:0|max:200',
-            'grade'          => 'nullable|string|max:5',
         ]);
 
-        Result::create($request->only('student_id', 'subject_id', 'semester_id', 'exam_id',
-                                      'internal_marks', 'external_marks', 'total_marks', 'grade'));
-        return redirect()->route('admin.results.index')->with('success', 'Result added successfully.');
+        $total_marks = $request->internal_marks + $request->external_marks;
+
+        Result::updateOrCreate(
+            [
+                'student_id' => $request->student_id,
+                'subject_id' => $request->subject_id,
+                'exam_id' => $request->exam_id,
+            ],
+            [
+                'semester_id' => $request->semester_id,
+                'internal_marks' => $request->internal_marks,
+                'external_marks' => $request->external_marks,
+                'total_marks' => $total_marks,
+                'grade' => $request->grade,
+            ]
+        );
+
+        return redirect()->route('admin.results.index')->with('success', 'Result added/updated successfully.');
     }
 
     public function show(Result $result)
@@ -69,12 +101,21 @@ class ResultController extends Controller
             'exam_id'        => 'required|exists:exams,id',
             'internal_marks' => 'required|numeric|min:0|max:100',
             'external_marks' => 'required|numeric|min:0|max:100',
-            'total_marks'    => 'required|numeric|min:0|max:200',
-            'grade'          => 'nullable|string|max:5',
         ]);
 
-        $result->update($request->only('student_id', 'subject_id', 'semester_id', 'exam_id',
-                                       'internal_marks', 'external_marks', 'total_marks', 'grade'));
+        $total_marks = $request->internal_marks + $request->external_marks;
+
+        $result->update([
+            'student_id' => $request->student_id,
+            'subject_id' => $request->subject_id,
+            'semester_id' => $request->semester_id,
+            'exam_id' => $request->exam_id,
+            'internal_marks' => $request->internal_marks,
+            'external_marks' => $request->external_marks,
+            'total_marks' => $total_marks,
+            'grade' => $request->grade,
+        ]);
+
         return redirect()->route('admin.results.index')->with('success', 'Result updated successfully.');
     }
 
