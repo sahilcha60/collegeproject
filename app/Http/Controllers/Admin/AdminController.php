@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use App\Models\Department;
-use App\Models\Student;
-use App\Models\Teacher;
-use App\Models\Subject;
 use App\Models\Notice;
 use App\Models\Exam;
 use App\Models\ExamSchedule;
+use App\Models\Request;
+use App\Models\Student;
+use App\Models\Subject;
+use App\Models\Teacher;
 
 class AdminController extends Controller
 {
@@ -21,6 +23,10 @@ class AdminController extends Controller
             'students' => Student::count(),
             'teachers' => Teacher::count(),
             'subjects' => Subject::count(),
+            'pending_requests' => Request::where('status', 'pending')->count(),
+            'today_attendance' => Attendance::whereDate('date', now())->count(),
+            'student_attendance_today' => Attendance::where('role', 'student')->whereDate('date', now())->count(),
+            'teacher_attendance_today' => Attendance::where('role', 'teacher')->whereDate('date', now())->count(),
         ];
 
         // Recent notices (last 5)

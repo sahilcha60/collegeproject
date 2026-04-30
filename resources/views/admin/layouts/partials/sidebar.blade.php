@@ -84,6 +84,24 @@
                 </ul>
             </li>
 
+            <li class="{{ request()->routeIs('admin.billings.*') || request()->routeIs('admin.billings.show') ? 'active-page' : '' }}">
+                <a href="{{ route('admin.billings.index') }}">
+                    <i class="ri-file-dollar-line"></i>
+                    <span>Billing</span>
+                </a>
+            </li>
+            <li class="dropdown {{ request()->routeIs('admin.attendance.*') ? 'open' : '' }}">
+                <a href="javascript:void(0)">
+                    <i class="ri-calendar-check-line"></i>
+                    <span>Attendance</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{{ route('admin.attendance.students') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Student Attendance</a></li>
+                    <li><a href="{{ route('admin.attendance.teachers') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Teacher Attendance</a></li>
+                    <li><a href="{{ route('admin.attendance.report') }}"><i class="ri-circle-fill circle-icon w-auto"></i>Attendance Report</a></li>
+                </ul>
+            </li>
+
             <li class="dropdown {{ request()->routeIs('admin.exams.*') || request()->routeIs('admin.exam-schedules.*') || request()->routeIs('admin.results.*') ? 'open' : '' }}">
                 <a href="javascript:void(0)">
                     <i class="ri-file-edit-line"></i>
@@ -100,6 +118,12 @@
                 <a href="{{ route('admin.notices.index') }}">
                     <i class="ri-booklet-line"></i>
                     <span>Notices</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('admin.requests.*') ? 'active-page' : '' }}">
+                <a href="{{ route('admin.requests.index') }}">
+                    <i class="ri-mail-open-line"></i>
+                    <span>Requests</span>
                 </a>
             </li>
         </ul>

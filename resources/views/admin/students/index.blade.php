@@ -27,6 +27,7 @@
                 <td class="px-6 py-4 text-sm text-gray-500">{{ $student->department->name ?? '—' }}</td>
                 <td class="px-6 py-4 text-sm text-gray-500">{{ $student->semester->name ?? '—' }}</td>
                 <td class="px-6 py-4 text-sm flex gap-3">
+                    <a href="{{ route('admin.billings.show', $student) }}" class="text-blue-600 hover:underline">Billing</a>
                     <a href="{{ route('admin.students.edit', $student) }}" class="text-yellow-600 hover:underline">Edit</a>
                     <form action="{{ route('admin.students.destroy', $student) }}" method="POST" onsubmit="return confirm('Delete this student?')">
                         @csrf @method('DELETE')
